@@ -2,11 +2,17 @@
 
 'use strict';
 
-function ChartViewModel(webApiSvc, $timeout) {
+/**
+ * @ngdoc function
+ * @name webappApp.viewmodel:ChartViewModel
+ * @description
+ * # ChartViewModel
+ * ViewModel for charts
+ */
+function ChartViewModel(webApiSvc) {
   var self = {};
 
   self.webApiSvc = webApiSvc;
-  self.$timeout = $timeout;
 
   self.chartType = 'bar';
   self.model = initModel();
@@ -16,16 +22,21 @@ function ChartViewModel(webApiSvc, $timeout) {
   self.getChart = getChart;
   self.getChartData = getChartData;
   self.getDataForDate = getDataForDate;
+  self.getChartData = getChartData;
 
-  self.chartData = getChartData;
-  self.isLoadingCharts = false;
-
+  self.aggregateFn = 'aggregateFnDefault';
   self.setDefaultData = setDefaultData;
   self.setMinData = setMinData;
   self.setAvgData = setAvgData;
   self.setMaxData = setMaxData;
 
+  self.updateDate = updateDate;
+
   // functions
+
+  /**
+ * get all charts data
+ */
   function getChartData() {
     var chartData = { series: [], data: [] };
     for (var chart in self.model.charts) {
@@ -38,10 +49,16 @@ function ChartViewModel(webApiSvc, $timeout) {
     return chartData;
   }
 
+  /**
+ * verify if the given chart is already loaded
+ */
   function isChartLoaded(chart) {
     return self.model.charts.hasOwnProperty(chart) && chart.data && chart.data.length;
   }
 
+  /**
+ * initialize angular-charts model
+ */
   function initModel() {
     return {
       charts: [],
@@ -52,6 +69,9 @@ function ChartViewModel(webApiSvc, $timeout) {
     };
   }
 
+  /**
+ * initialize angular-charts config 
+ */
   function initConfig() {
     return {
       labels: false,
@@ -64,6 +84,9 @@ function ChartViewModel(webApiSvc, $timeout) {
     };
   }
 
+  /**
+ * get all charts
+ */
   function getCharts() {
     return self.webApiSvc.query()
       .$promise.then(function (charts) {
@@ -79,6 +102,9 @@ function ChartViewModel(webApiSvc, $timeout) {
       });
   }
 
+  /**
+ * get chart for the given chartId
+ */
   function getChart(chartId) {
     var id = chartId;
     return self.webApiSvc.get({ id: id })
@@ -92,13 +118,17 @@ function ChartViewModel(webApiSvc, $timeout) {
       });
   };
 
+  /**
+ * get chart data for the given chartId
+ */
   function getChartData(chartId) {
     return self.webApiSvc.getData({ id: chartId })
       .$promise.then(function (result) {
         self.model.charts.some(function (chart) {
           if (chart.id === chartId) {
             chart.data = { data: [], series: [] };
-            for (var i = 0; i < result.length; i++) {
+            var len = result.length
+            for (var i = 0; i < len; i++) {
               var chartData = result[i];
               chart.originalData.push(angular.copy(chartData));
               chart.data.series.push(chartData.date);
@@ -110,6 +140,9 @@ function ChartViewModel(webApiSvc, $timeout) {
       });
   };
 
+  /**
+ * get chart data for the given tuple chartId & date
+ */
   function getDataForDate(chartId, date) {
     return self.webApiSvc.get({ id: chartId, date: date })
       .$promise.then(function (result) {
@@ -123,16 +156,26 @@ function ChartViewModel(webApiSvc, $timeout) {
       });
   };
 
+  /**
+ * Set default data
+ */
   function setDefaultData(chart) {
-    var lenData = chart.data.data.length;
-    var data = chart.data;
+    var lenData = chart.originalData.length;
+
+    chart.data.series.length = 0;
+    chart.data.data.length = 0;
 
     for (var i = 0; i < lenData; i++) {
-      chart.data.data[i].y.length = 0;
-      chart.data.data[i].y = angular.copy(chart.originalData[i].data);
+      var chartData = angular.copy(chart.originalData[i]);
+
+      chart.data.series.push(chartData.date);
+      chart.data.data.push({ x: chartData.date, y: chartData.data });
     }
   }
 
+  /**
+ * aggregate function Min
+ */
   function setMinData(chart) {
     var chartData = chart.data;
     var originalData = angular.copy(chart.originalData);
@@ -152,6 +195,9 @@ function ChartViewModel(webApiSvc, $timeout) {
     }
   }
 
+  /**
+ * aggregate function Avg
+ */
   function setAvgData(chart) {
     var chartData = chart.data;
     var originalData = angular.copy(chart.originalData);
@@ -171,6 +217,9 @@ function ChartViewModel(webApiSvc, $timeout) {
     }
   }
 
+  /**
+   * aggregate function Max
+   */
   function setMaxData(chart) {
     var chartData = chart.data;
     var originalData = angular.copy(chart.originalData);
@@ -187,6 +236,30 @@ function ChartViewModel(webApiSvc, $timeout) {
 
       y.length = 0;
       y.push(max);
+    }
+  }
+
+  /**
+   * update chart with the given date
+   */
+  function updateDate(chart) {
+    self.setDefaultData(chart);
+
+    if (chart.dateSelected) {
+      var data = {};
+      chart.data.series.length = 0;
+      chart.data.series.push(chart.dateSelected.date);
+
+      chart.data.data.some(function (element, index, array) {
+        if (element.x === chart.dateSelected.date) {
+          data = angular.copy(element);
+          return true;
+        }
+      });
+      chart.data.data.length = 0;
+      chart.data.data.push(data);
+    } else {
+      self.aggregateFn = 'aggregateFnDefault';
     }
   }
 

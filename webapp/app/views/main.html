@@ -11,7 +11,7 @@
                 </div>
                 <div class="panel-body" ng-disabled="!chart.enabled">
                     <label>
-                        Select chart type:
+                        Charts type:
                         <select ng-model="chart.chartType" ng-disabled="!chart.enabled">
                             <option value="pie">pie</option>
                             <option value="bar">bar</option>
@@ -20,18 +20,26 @@
                             <option value="area">area</option>
                         </select>
                     </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio0" value="option3" ng-click="vm.setDefaultData(chart)" ng-disabled="!chart.enabled"> Default
+                    <label>
+                        Dates:
+                        <select ng-model="chart.dateSelected" ng-options="data.date for data in chart.originalData" ng-change="vm.updateDate(chart)" ng-disabled="!chart.enabled">
+                            <option value="">Select date</option>
+                        </select>
                     </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" ng-click="vm.setMinData(chart)" ng-disabled="!chart.enabled"> Min
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" ng-click="vm.setAvgData(chart)" ng-disabled="!chart.enabled"> Avg
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" ng-click="vm.setMaxData(chart)" ng-disabled="!chart.enabled"> Max
-                    </label>
+                    <div id="aggregate-funtions" ng-show="!chart.dateSelected">
+                        <label class="radio-inline">
+                            <input type="radio" name="aggregateFns" id="aggregateFnDefault" ng-value="aggregateFnDefault" ng-model="vm.aggregateFn" ng-click="vm.setDefaultData(chart)" ng-disabled="!chart.enabled"> Default
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="aggregateFns" id="aggregateFnMin" ng-value="aggregateFnMin" ng-model="vm.aggregateFn" ng-click="vm.setMinData(chart)" ng-disabled="!chart.enabled"> Min
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="aggregateFns" id="aggregateFnAvg" ng-value="aggregateFnAvg" ng-model="vm.aggregateFn" ng-click="vm.setAvgData(chart)" ng-disabled="!chart.enabled"> Avg
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="aggregateFns" id="aggregateFnMax" ng-value="aggregateFnMax" ng-model="vm.aggregateFn" ng-click="vm.setMaxData(chart)" ng-disabled="!chart.enabled"> Max
+                        </label>
+                    </div>
                     <div ac-chart="chart.chartType" ac-data="chart.data" ac-config="vm.config"></div>
                 </div>
             </div>

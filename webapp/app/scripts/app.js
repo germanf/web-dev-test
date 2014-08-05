@@ -48,8 +48,8 @@ app.factory('webApiSvc', function ($resource) {
   return api;
 });
 
-app.factory('chartViewModel', function (webApiSvc, $timeout) {
-  return new ChartViewModel(webApiSvc, $timeout);
+app.factory('chartViewModel', function (webApiSvc) {
+  return new ChartViewModel(webApiSvc);
 });
 
 app.config(function ($routeProvider) {

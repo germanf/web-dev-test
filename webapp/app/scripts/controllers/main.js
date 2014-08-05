@@ -11,6 +11,6 @@ angular.module('webappApp')
   .controller('MainCtrl', ['chartViewModel', '$scope', function (chartViewModel, $scope) {
     $scope.vm = chartViewModel;
 
-    //initialize
+    //retrieve charts
     $scope.vm.getCharts();
   }]);
