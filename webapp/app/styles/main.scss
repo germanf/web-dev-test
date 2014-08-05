@@ -90,9 +90,15 @@ body {
     }
 }
 
-/*div[ac-chart] {
+.charts {
+    .chart {
+        display: block;
+    }
+}
+
+div[ac-chart] {
     float: left;
-    width: 48%;
+    width: 77%;
     height: 400px;
     margin: 0 1%;
-}*/
+}

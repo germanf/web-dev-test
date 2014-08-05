@@ -21,20 +21,35 @@ var app = angular
   ]);
 
 app.factory('webApiSvc', function ($resource) {
-  // Rest API
-  return {
-    someMethod: function () {
-      return meaningOfLife;
-    },
-    getCharts: $resource('http://localhost:3000/charts', {}),
-    getChart: $resource('http://localhost:3000/charts/:id', { id: '@chartId' }),
-    getChartData: $resource('http://localhost:3000/charts/:id/data', { id: '@chartId' }),
-    getChartDataByDate: $resource('http://localhost:3000/charts/3/data/2013-02-01', { id: '@chartId', date: '@date' })
+  var chart = $resource(
+    'http://localhost:3000/charts/:id', { id: '@id' },
+    {
+      data: {
+        method: 'GET',
+        params: { id: '@id' },
+        url: 'http://localhost:3000/charts/:id/data/',
+        isArray: true
+      },
+      dataForDate: {
+        method: 'GET',
+        params: { id: '@id', date: '@date' },
+        url: 'http://localhost:3000/charts/:id/data/:date',
+        isArray: false
+      }
+    });
+
+  var api = {
+    get: chart.get,
+    query: chart.query,
+    getData: chart.data,
+    getDataForDate: chart.dataForDate
   };
+
+  return api;
 });
 
 app.factory('chartViewModel', function (webApiSvc, $timeout) {
-  return new ChartViewModel(webapi, $timeout);
+  return new ChartViewModel(webApiSvc, $timeout);
 });
 
 app.config(function ($routeProvider) {

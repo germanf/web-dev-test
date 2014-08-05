@@ -8,10 +8,9 @@
  * Controller of the webappApp
  */
 angular.module('webappApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+  .controller('MainCtrl', ['chartViewModel', '$scope', function (chartViewModel, $scope) {
+    $scope.vm = chartViewModel;
+
+    //initialize
+    $scope.vm.getCharts();
+  }]);

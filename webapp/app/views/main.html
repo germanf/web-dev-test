@@ -1,14 +1,44 @@
-<div class="jumbotron">
+<div class="highlight">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Charts
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <h3>Available charts</h3>
+                        <div class="btn-group charts" data-toggle="buttons">
+                            <label class="btn btn-primary btn-sm active chart" ng-repeat="chart in vm.model.charts">
+                                <input type="checkbox"
+                                       name="vm.model.selectedCharts[]"
+                                       value="{{chart.name}}"
+                                       ng-model="chart.selected"> {{chart.name}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <h3>Charts types</h3>
+                        <select ng-model="vm.chartType">
+                            <option value="pie">pie</option>
+                            <option value="bar">bar</option>
+                            <option value="line">line</option>
+                            <option value="point">point</option>
+                            <option value="area">area</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-    <select ng-model="vm.chartType">
-        <option value="pie">pie</option>
-        <option value="bar">bar</option>
-        <option value="line">line</option>
-        <option value="point">point</option>
-        <option value="area">area</option>
-    </select>
-
-    <br />
-
-    <div ac-chart="vm.chartType" ac-data="vm.model.data" ac-config="vm.config"></div>
+        </div>
+        <div class="col-lg-9">
+            <div class="panel-group">
+                <div class="panel-body">
+                    <div ac-chart="vm.chartType" ac-data="vm.model.data" ac-config="vm.config"></div>
+                </div>
+                </div>
+        </div>
+    </div>
 </div>
