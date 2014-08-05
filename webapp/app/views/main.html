@@ -1,44 +1,41 @@
 <div class="highlight">
     <div class="row">
-        <div class="col-lg-3">
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            Charts
-                        </h4>
+        <div class="col-lg-12">
+            <div class="panel panel-default" ng-repeat="chart in vm.model.charts" ng-cloak>
+                <div class="panel-heading">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="chart.enabled"> Activate {{chart.description}} Chart
+                        </label>
                     </div>
-                    <div class="panel-body">
-                        <h3>Available charts</h3>
-                        <div class="btn-group charts" data-toggle="buttons">
-                            <label class="btn btn-primary btn-sm active chart" ng-repeat="chart in vm.model.charts">
-                                <input type="checkbox"
-                                       name="vm.model.selectedCharts[]"
-                                       value="{{chart.name}}"
-                                       ng-model="chart.selected"> {{chart.name}}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <h3>Charts types</h3>
-                        <select ng-model="vm.chartType">
+                </div>
+                <div class="panel-body" ng-disabled="!chart.enabled">
+                    <label>
+                        Select chart type:
+                        <select ng-model="chart.chartType" ng-disabled="!chart.enabled">
                             <option value="pie">pie</option>
                             <option value="bar">bar</option>
                             <option value="line">line</option>
                             <option value="point">point</option>
                             <option value="area">area</option>
                         </select>
-                    </div>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio0" value="option3" ng-click="vm.setDefaultData(chart)" ng-disabled="!chart.enabled"> Default
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" ng-click="vm.setMinData(chart)" ng-disabled="!chart.enabled"> Min
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" ng-click="vm.setAvgData(chart)" ng-disabled="!chart.enabled"> Avg
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" ng-click="vm.setMaxData(chart)" ng-disabled="!chart.enabled"> Max
+                    </label>
+                    <div ac-chart="chart.chartType" ac-data="chart.data" ac-config="vm.config"></div>
                 </div>
             </div>
-
-        </div>
-        <div class="col-lg-9">
-            <div class="panel-group">
-                <div class="panel-body">
-                    <div ac-chart="vm.chartType" ac-data="vm.model.data" ac-config="vm.config"></div>
-                </div>
-                </div>
         </div>
     </div>
 </div>
+

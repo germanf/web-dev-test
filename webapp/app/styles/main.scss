@@ -98,7 +98,16 @@ body {
 
 div[ac-chart] {
     float: left;
-    width: 77%;
-    height: 400px;
+    width: 100%;
+    height: 350px;
     margin: 0 1%;
+}
+
+.panel-body[disabled],
+.panel-body[disabled] input,
+.panel-body[disabled] select,
+.panel-body[disabled] .radio-inline {
+    cursor: not-allowed;
+    background-color: #eee;
+    opacity: 1;
 }
